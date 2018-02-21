@@ -28,34 +28,34 @@ void internal_openResource(){
     List_insert(&resources_list, resources_list.last, (ListItem*) res);
   }
 
-  // at this point we should have the resource, if not something was wrong
+  //3 at this point we should have the resource, if not something was wrong
   if (! res || res->type!=type) {
      running->syscall_retvalue=DSOS_ERESOURCEOPEN;
      return;
   }
-  
+
   if (open_mode&DSOS_EXCL && res->descriptors.size){
      running->syscall_retvalue=DSOS_ERESOURCENOEXCL;
      return;
   }
 
-  
-  //5 create the descriptor for the resource in this process, and add it to
+
+  //4 create the descriptor for the resource in this process, and add it to
   //  the process descriptor list. Assign to the resource a new fd
   Descriptor* des=Descriptor_alloc(running->last_fd, res, running);
   if (! des){
      running->syscall_retvalue=DSOS_ERESOURCENOFD;
      return;
   }
-  running->last_fd++; // we increment the fd value for the next call
+  running->last_fd++; //5 we increment the fd value for the next call
   DescriptorPtr* desptr=DescriptorPtr_alloc(des);
   List_insert(&running->descriptors, running->descriptors.last, (ListItem*) des);
-  
+
   //6 add to the resource, in the descriptor ptr list, a pointer to the newly
   //  created descriptor
   des->ptr=desptr;
   List_insert(&res->descriptors, res->descriptors.last, (ListItem*) desptr);
 
-  // return the FD of the new descriptor to the process
+  //7 return the FD of the new descriptor to the process
   running->syscall_retvalue = des->fd;
 }
