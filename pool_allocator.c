@@ -47,7 +47,6 @@ PoolAllocatorResult PoolAllocator_init(PoolAllocator* a,
 }
 
 void* PoolAllocator_getBlock(PoolAllocator* a) {
-    printf("Dentro PoolAllocator_getBlock... \n");
   if (a->first_idx==-1)
     return 0;
 

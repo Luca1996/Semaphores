@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <poll.h>
+
 #include "disastrOS.h"
 
 // we need this to handle the sleep state
@@ -18,11 +19,10 @@ void childFunction(void* args){
   int type=0;
   int mode=0;
   int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
-  printf("prima della sem_open...\n");
-  int fd1=disastrOS_semopen(disastrOS_getpid(), 1);
-  printf("dopo la sem_open...\n");
-  printf("fd1=%d\n", fd1);
   printf("fd=%d\n", fd);
+  int fd1=disastrOS_semopen(disastrOS_getpid(), 1);
+  printf("Ho appena fatto una sem_open... \n");
+  printf("fd1=%d\n", fd1);
   printf("PID: %d, terminating\n", disastrOS_getpid());
 
   for (int i=0; i<(disastrOS_getpid()+1); ++i){

@@ -22,9 +22,7 @@ void Semaphore_init(){
 }
 
 Semaphore* Semaphore_alloc(int id, int count){
-    printf("Dentro semaphore.c, in Semaphore_alloc \n");
   Semaphore* r=(Semaphore*) PoolAllocator_getBlock(&_semaphores_allocator);
-  printf("Dopo la get block \n");
   if (!r)
     return 0;
   r->list.prev=r->list.next=0;
