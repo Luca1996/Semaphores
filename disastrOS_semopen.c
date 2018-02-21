@@ -26,7 +26,7 @@ void internal_semOpen(){
           b. If not we add it to semaphores_list:
     */
     printf("Check if the sem is already opened...\n");
-    if (!sem){
+    if (sem){
         printf("Prima della sem_alloc... \n");
         //segmenta qui, questa sopra è l'ultima printf che fa...
         sem = Semaphore_alloc(id, count);

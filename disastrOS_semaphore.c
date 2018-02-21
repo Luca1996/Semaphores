@@ -13,7 +13,7 @@ static char _semaphores_buffer[SEMAPHORE_BUFFER_SIZE];
 static PoolAllocator _semaphores_allocator;
 
 void Semaphore_init(){
-    int result=PoolAllocator_init(& _semaphores_allocator,
+    int result=PoolAllocator_init(&_semaphores_allocator,
 				  SEMAPHORE_SIZE,
 				  MAX_NUM_SEMAPHORES,
 				  _semaphores_buffer,
@@ -22,7 +22,7 @@ void Semaphore_init(){
 }
 
 Semaphore* Semaphore_alloc(int id, int count){
-    printf("in semaphore_alloc \n");
+    printf("Dentro semaphore.c, in Semaphore_alloc \n");
   Semaphore* r=(Semaphore*) PoolAllocator_getBlock(&_semaphores_allocator);
   printf("Dopo la get block \n");
   if (!r)
