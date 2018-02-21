@@ -15,7 +15,7 @@ void internal_semWait(){
 
     // 2) If the id is not in the process we need to raise an error code:
     if (!des) {
-        running->syscall_retvalue = DSOS_ESEMAPHORENOFD;
+        running->syscall_retvalue = DSOS_ESEMAPHORENOTAVAIBLE;
         return;
     }
 
