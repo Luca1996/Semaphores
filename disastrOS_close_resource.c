@@ -12,7 +12,7 @@ void internal_closeResource(){
   int fd=running->syscall_args[0];
 
   Descriptor* des=DescriptorList_byFd(&running->descriptors, fd);
-  //2 if the fd is not in the the process, we return an error
+  //2 if the fd is not in the process, we return an error
   if (! des){
     running->syscall_retvalue=DSOS_ERESOURCECLOSE;
     return;

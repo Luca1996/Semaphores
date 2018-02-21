@@ -5,7 +5,7 @@
 #ifdef _DISASTROS_DEBUG_
 #include <stdio.h>
 
-#define disastrOS_debug(...) printf(__VA_ARGS__) 
+#define disastrOS_debug(...) printf(__VA_ARGS__)
 
 #else //_DISASTROS_DEBUG_
 
@@ -16,7 +16,7 @@
 // initializes the structures and spawns a fake init process
 void disastrOS_start(void (*f)(void*), void* args, char* logfile);
 
-// generic syscall 
+// generic syscall
 int disastrOS_syscall(int syscall_num, ...);
 
 // classical process control
@@ -35,6 +35,12 @@ void disastrOS_sleep(int);
 int disastrOS_openResource(int resource_id, int type, int mode);
 int disastrOS_closeResource(int fd) ;
 int disastrOS_destroyResource(int resource_id);
+
+//Semaphores
+int disastrOS_semopen(int resource_id, int count);
+int disastrOS_semclose(int resource_id);
+int disastrOS_semwait(int resource_id);
+int disastrOS_sempost(int resource_id);
 
 // debug function, prints the state of the internal system
 void disastrOS_printStatus();
