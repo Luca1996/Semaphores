@@ -10,6 +10,7 @@ void internal_semClose(){
     // we first take the fd of the semaphore
     // then we look for the semaphore
 
+    // prendere l'id non il descrittore
     int fd = running->syscall_args[0];
     SemDescriptor* sem_desc = SemDescriptorList_byFd(&running->sem_descriptors,fd);
 
@@ -47,7 +48,6 @@ void internal_semClose(){
 
     SemDescriptor_free(sem_desc);
     SemDescriptorPtr_free(sem_desc_ptr);
-    Semaphore_free(sem);
     running->syscall_retvalue = 0;
     return;
 }
