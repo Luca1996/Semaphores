@@ -47,6 +47,7 @@ void internal_semClose(){
 
     SemDescriptor_free(sem_desc);
     SemDescriptorPtr_free(sem_desc_ptr);
+    Semaphore_free(sem);
     running->syscall_retvalue = 0;
     return;
 }

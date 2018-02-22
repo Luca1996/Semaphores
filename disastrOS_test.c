@@ -20,9 +20,8 @@ void childFunction(void* args){
   int mode=0;
   int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
   printf("fd=%d\n", fd);
-  int fd1=disastrOS_semopen(disastrOS_getpid(), 1);
-  printf("Ho appena fatto una sem_open... \n");
-  printf("fd1=%d\n", fd1);
+  
+  
   printf("PID: %d, terminating\n", disastrOS_getpid());
 
   for (int i=0; i<(disastrOS_getpid()+1); ++i){
@@ -48,6 +47,7 @@ void initFunction(void* args) {
     printf("opening resource (and creating if necessary)\n");
     int fd=disastrOS_openResource(i,type,mode);
     printf("fd=%d\n", fd);
+    int fd1=disastrOS_semopen(10, 1); //se lo apro qui si referenziano,però poi non so come effettuare operazioni sul semaforo nella child function
     disastrOS_spawn(childFunction, 0);
     alive_children++;
   }
