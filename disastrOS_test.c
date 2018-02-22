@@ -20,10 +20,12 @@ void childFunction(void* args){
   int mode=0;
   int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
   printf("fd=%d\n", fd);
-  int fd1=disastrOS_semopen(disastrOS_getpid(), 1);
-  printf("Ho appena fatto una sem_open... \n");
-  printf("fd1=%d\n", fd1);
+
+
+
+
   printf("PID: %d, terminating\n", disastrOS_getpid());
+
 
   for (int i=0; i<(disastrOS_getpid()+1); ++i){
     printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
@@ -48,6 +50,21 @@ void initFunction(void* args) {
     printf("opening resource (and creating if necessary)\n");
     int fd=disastrOS_openResource(i,type,mode);
     printf("fd=%d\n", fd);
+
+
+    printf("Sto aprendo il semaforo #%d... \n",i);
+    int fd1=disastrOS_semopen(i, 1);
+    printf("fd1=%d\n", fd1);
+
+    printf("Sto mettendo in wait il semaforo #%d... \n",i);
+    int y=disastrOS_semwait(i);
+    printf("y=%d\n", y);
+
+    //printf("Sto chiudendo il semaforo #%d... \n",fd1);
+    //int x = disastrOS_semclose(fd1);
+    //printf("x=%d\n", x);
+
+
     disastrOS_spawn(childFunction, 0);
     alive_children++;
   }

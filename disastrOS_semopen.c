@@ -17,8 +17,8 @@ void internal_semOpen(){
     printf("Getting info from PCB...\n");
     int id = running->syscall_args[0];
     int count = running->syscall_args[1];
-    int open_mode=running->syscall_args[2];
-    printf("Open_mode: %d \n", open_mode);
+    //int open_mode=running->syscall_args[2];
+    //printf("Open_mode: %d \n", open_mode);
 
     Semaphore* sem = SemaphoreList_byId(&semaphores_list, id);
     printf("Information acquired!\n");
@@ -30,18 +30,18 @@ void internal_semOpen(){
     */
     printf("Check if the sem is already opened...\n");
     //ho seguito gli step di open_resource.c, anche se non so se è necessario fare questa cosa anche nel caso dei semafori
-    if (open_mode&DSOS_CREATE){
+    //if (open_mode&DSOS_CREATE){
         // non entra mai qui!!!
-        printf("Sono alla riga 34 di sem_open.c");
+      //  printf("Sono alla riga 34 di sem_open.c\n");
         if (sem) {
-            printf("Sono alla riga 36 di sem_open.c");
+            printf("Sono alla riga 36 di sem_open.c\n");
             running->syscall_retvalue=DSOS_ERESOURCECREATE;
             return;
         }
         sem=Semaphore_alloc(id, count);
         List_insert(&semaphores_list, semaphores_list.last, (ListItem*) sem);
         printf("Sem added to sems_list! \n");
-    }
+   // }
 
 
     printf("Check if all is ok...\n");

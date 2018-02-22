@@ -22,15 +22,22 @@ void internal_semWait(){
     // 3) We need to check the value of the count, if count <= 0 we need to put the sem in waiting descriptors list:
 
     Semaphore* sem = des->semaphore;
+    printf("Il count del semaforo prima della sottrazione e': %d\n",(sem->count));
     if(sem->count <= 0){
+        //qui non entro mai
+        printf("sono nella wait, punto 3\n");
         des = (SemDescriptor*) List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem*) running);
     }
 
     // 4) Now we can put in wait the sem by decreasing it's count value:
-    sem->count--;
+    printf("sono nella wait, punto 4\n");
+    sem->count=(sem->count-1);
+    printf("Il count del semaforo dopo la sottrazione e': %d",(sem->count));
 
     // 5) a. With the updated value of count, we need to know if our process has to wait:
     if(sem->count < 0){
+        //qui non entro mai
+         printf("sono nella wait, punto 5\n");
         sem->count=0;
 
         // b. The if is TRUE, so the process need to wait;
