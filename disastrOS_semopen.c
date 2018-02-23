@@ -60,7 +60,7 @@ void internal_semOpen(){
     printf("Creating sem's descriptor...\n");
     printf("Adding it to descriptors list\n");
     printf("Allocating fd for the sem...\n");
-    SemDescriptor* des = SemDescriptor_alloc(running->last_fd, sem, running);
+    SemDescriptor* des = SemDescriptor_alloc(running->last_sem_fd, sem, running);
     if (!des) {
         running->syscall_retvalue = DSOS_ESEMAPHORENOFD;
         return;
