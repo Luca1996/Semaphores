@@ -10,11 +10,9 @@ void internal_semClose(){
     // we first take the fd of the semaphore
     // then we look for the semaphore
 
-    // prendere l'id non il descrittore
     int fd = running->syscall_args[0];
-    Semaphore* sem = SemaphoreList_byId(&semaphores_list, fd);//aggiunto questo,in questo modo mi prendo direttamente il semaforo
-    // da modificare il resto
-    
+    SemDescriptor* sem_desc = SemDescriptorList_byFd(&running->sem_descriptors,fd);
+
     // checking semaphore descriptor, if not found we raise an error
 
     if (!sem_desc) {

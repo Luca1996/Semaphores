@@ -80,7 +80,8 @@ void SemDescriptorList_print(ListHead* l){
   printf("[");
   while(aux){
     SemDescriptor* d=(SemDescriptor*)aux;
-    printf("(fd: %d, rid:%d)",
+    printf("(pid: %d, fd: %d, rid:%d)",
+       d->pcb->pid,
 	   d->fd,
 	   d->semaphore->id);
     if(aux->next)
