@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "disastrOS_semaphore.h"
 #include "disastrOS_descriptor.h"
+#include "disastrOS_semdescriptor.h"
 #include "pool_allocator.h"
 #include "linked_list.h"
 
