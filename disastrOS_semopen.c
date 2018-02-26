@@ -36,11 +36,11 @@ void internal_semOpen(){
 
 
     // 3) Check if something gone wrong:
-    /*if (! sem || sem->count!=count) {
+    /*if (sem && sem->count!=count) {
         running->syscall_retvalue = DSOS_ESEMAPHOREOPEN;
         return;
-    }
-    */
+    }*/
+    
 
     /* 4) a. Create the descriptor for the semaphore;
           b. Add it to process descriptors list;

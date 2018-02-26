@@ -26,9 +26,10 @@ void childFunction(void* args){
 
     //printf("Sto mettendo in wait il semaforo #%d... \n",i);
     
-  int fd1=disastrOS_semopen(disastrOS_getpid(), 1);
+  int fd1=disastrOS_semopen(1, 1);
   printf("fd1=%d\n", fd1);
-  disastrOS_semwait(fd1);
+  disastrOS_semclose(1);
+  //disastrOS_semwait(fd1);
   printf("PID: %d, terminating\n", disastrOS_getpid());
 
 
