@@ -22,20 +22,24 @@ void childFunction(void* args){
   printf("fd=%d\n", fd);
 
   //printf("Sto aprendo il semaforo #%d... \n",i);
-    
 
-    //printf("Sto mettendo in wait il semaforo #%d... \n",i);
-    
+
+
+
   int fd1=disastrOS_semopen(disastrOS_getpid(), 1);
   printf("fd1=%d\n", fd1);
-  disastrOS_semclose(fd1);
-  printf("PID: %d, terminating\n", disastrOS_getpid());
+  printf("Sto mettendo in wait il semaforo #%d... \n",fd1);
+  int y = disastrOS_semwait(fd1);
+  printf("y=%d\n",y);
+  //la close funziona
+  //disastrOS_semclose(fd1);
+  //printf("PID: %d, terminating\n", disastrOS_getpid());
 
 
   for (int i=0; i<(disastrOS_getpid()+1); ++i){
     printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
-    
-    
+
+
     disastrOS_sleep((20-disastrOS_getpid())*5);
   }
   disastrOS_exit(disastrOS_getpid()+1);
@@ -58,8 +62,8 @@ void initFunction(void* args) {
     int fd=disastrOS_openResource(i,type,mode);
     printf("fd=%d\n", fd);
 
-    
-    
+
+
 
     //printf("Sto chiudendo il semaforo #%d... \n",fd1);
     //int x = disastrOS_semclose(fd1);
