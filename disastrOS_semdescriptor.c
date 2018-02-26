@@ -43,6 +43,7 @@ SemDescriptor* SemDescriptor_alloc(int fd, Semaphore* res, PCB* pcb) {
   d->fd=fd;
   d->semaphore=res;
   d->pcb=pcb;
+  d->ptr=SemDescriptorPtr_alloc(d); // aggiunto ma non so se giusto
   return d;
 }
 
@@ -96,8 +97,8 @@ void SemDescriptorPtrList_print(ListHead* l){
   while(aux){
     SemDescriptorPtr* d=(SemDescriptorPtr*)aux;
     printf("(pid: %d, fd: %d, rid:%d)",
-	   d->descriptor->fd,
-	   d->descriptor->pcb->pid,
+	   d->descriptor->pcb->pid,//questo stava sotto ed era al contrario
+       d->descriptor->fd,
 	   d->descriptor->semaphore->id);
     if(aux->next)
       printf(", ");

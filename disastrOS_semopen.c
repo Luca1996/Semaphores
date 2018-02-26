@@ -27,7 +27,7 @@ void internal_semOpen(){
           b. If not we add it to semaphores_list:
     */
 
-    // se modifico la parte 2 e levo la parte 3 i processi referenziano tutti lo stesso semaforo, se lo apro nella init function
+
 
     if (!sem) {
         sem=Semaphore_alloc(id, count);
@@ -47,7 +47,7 @@ void internal_semOpen(){
           c. Assign to the semaphore just created a fd:
     */
 
-    SemDescriptor* des = SemDescriptor_alloc(running->last_fd, sem, running);
+    SemDescriptor* des = SemDescriptor_alloc(running->last_sem_fd, sem, running);
     if (!des) {
         running->syscall_retvalue = DSOS_ESEMAPHORENOFD;
         return;

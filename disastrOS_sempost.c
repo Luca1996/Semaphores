@@ -32,7 +32,7 @@ void internal_semPost(){
     sem->count++;
 
     // then we insert the process in waiting list
-    List_insert(&waiting_list,waiting_list.last,(ListItem*)running);
+    List_insert(&ready_list,ready_list.last,(ListItem*)running);
 
     // we set process status on ready
     running->status = Ready;

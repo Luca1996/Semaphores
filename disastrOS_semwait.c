@@ -10,9 +10,7 @@ void internal_semWait(){
 
     // 1) Like in the disastrOS_close_resource we need to find the semephore id which we need to put in wait:
     int id = running->syscall_args[0];
-
     SemDescriptor* des = SemDescriptorList_byFd(&running->sem_descriptors, id);
-
     // 2) If the id is not in the process we need to raise an error code:
     if (!des) {
         running->syscall_retvalue = DSOS_ESEMAPHORENOTAVAIBLE;
@@ -23,7 +21,7 @@ void internal_semWait(){
 
     Semaphore* sem = des->semaphore;
     if(sem->count <= 0){
-        des = (SemDescriptor*) List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem*) running);
+        des = (SemDescriptor*) List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last,(ListItem*) des);
     }
 
     // 4) Now we can put in wait the sem by decreasing it's count value:
