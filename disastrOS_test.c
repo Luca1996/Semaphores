@@ -23,13 +23,19 @@ void childFunction(void* args){
 
   //printf("Sto aprendo il semaforo #%d... \n",i);
     
-
-    //printf("Sto mettendo in wait il semaforo #%d... \n",i);
-    
   int fd1=disastrOS_semopen(1, 1);
-  printf("fd1=%d\n", fd1);
+    //printf("Sto mettendo in wait il semaforo #%d... \n",i);
+  if (disastrOS_getpid() % 2 == 0){
+      printf("WAIT\n");
+      disastrOS_semwait(fd1);
+      disastrOS_printStatus();
+      printf("DOPO WAIT\n");
+  }  
+  
+  
   //disastrOS_semclose(fd1);
-  disastrOS_semwait(fd1);
+
+  
   printf("PID: %d, terminating\n", disastrOS_getpid());
 
 
@@ -38,6 +44,9 @@ void childFunction(void* args){
     
     
     disastrOS_sleep((20-disastrOS_getpid())*5);
+    if (disastrOS_getpid() % 2 != 0){
+        disastrOS_sempost(fd1);
+    }
   }
   disastrOS_exit(disastrOS_getpid()+1);
 }
@@ -51,7 +60,7 @@ void initFunction(void* args) {
 
   printf("I feel like to spawn 10 nice threads\n");
   int alive_children=0;
-  /*for (int i=0; i<10; ++i) {
+  for (int i=0; i<5; ++i) {
     int type=0;
     int mode=DSOS_CREATE;
     printf("mode: %d\n", mode);
@@ -79,9 +88,7 @@ void initFunction(void* args) {
     printf("initFunction, child: %d terminated, retval:%d, alive: %d \n",
 	   pid, retval, alive_children);
     --alive_children;
-  }*/
-  int fd = disastrOS_semopen(1,0);
-  disastrOS_semwait(fd);
+  }
   printf("shutdown!");
   disastrOS_shutdown();
 }

@@ -21,21 +21,20 @@ void internal_semPost(){
 
     // taking sem to take his value
     Semaphore* sem = sem_desc->semaphore;
-    
+    (sem->count)++;
+    SemDescriptor* proc_des;
     // checking value
     if (sem->count <= 0) {
-        sem->count = 0;
         // removing first one from the waiting list
-        List_detach(&waiting_list,(ListItem*)waiting_list.first);
+        List_insert(&ready_list,ready_list.last,(ListItem*) running);
+        
+        proc_des = (SemDescriptor*)List_detach(&sem->waiting_descriptors,(ListItem*)sem->waiting_descriptors.first);
+        List_insert(&sem->descriptors,sem->descriptors.last,(ListItem*) sem_desc->ptr);
+        List_detach(&waiting_list,(ListItem*) proc_des->pcb);
+        running->status = Ready;
+        running = proc_des->pcb;
     }
     // incrementing count
-    sem->count++;
-
-    // then we insert the process in waiting list
-    List_insert(&ready_list,ready_list.last,(ListItem*)running);
-
-    // we set process status on ready
-    running->status = Ready;
 
     running->syscall_retvalue = 0;
     return;
