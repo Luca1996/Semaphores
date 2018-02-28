@@ -17,8 +17,6 @@ void internal_semOpen(){
 
     int id = running->syscall_args[0];
     int count = running->syscall_args[1];
-    //int open_mode=running->syscall_args[2];
-    //printf("Open_mode: %d \n", open_mode);
 
     Semaphore* sem = SemaphoreList_byId(&semaphores_list, id);
 
@@ -26,8 +24,6 @@ void internal_semOpen(){
     /* 2) a. Check if the semaphore is already opened
           b. If not we add it to semaphores_list:
     */
-
-
 
     if (!sem) {
         sem=Semaphore_alloc(id, count);
@@ -40,7 +36,7 @@ void internal_semOpen(){
         running->syscall_retvalue = DSOS_ESEMAPHOREOPEN;
         return;
     }*/
-    
+
 
     /* 4) a. Create the descriptor for the semaphore;
           b. Add it to process descriptors list;
@@ -55,17 +51,20 @@ void internal_semOpen(){
 
 
     // 5) Increment the fd value for the next call:
+
     running->last_sem_fd++;
     SemDescriptorPtr* desptr = SemDescriptorPtr_alloc(des);
     List_insert(&running->sem_descriptors, running->sem_descriptors.last, (ListItem*) des);
 
 
     // 6) Add a poiter to the newly created descriptor in the descriptor's pointer list:
+
     des->ptr = desptr;
     List_insert(&sem->descriptors, sem->descriptors.last, (ListItem*) desptr);
 
 
     // 7) Return the file descriptor to the process:
+
     running->syscall_retvalue = des->fd;
     return;
 

@@ -20,14 +20,16 @@ void internal_semPost(){
     }
 
     // taking sem to take his value
+
     Semaphore* sem = sem_desc->semaphore;
     (sem->count)++;
     SemDescriptor* proc_des;
     // checking value
     if (sem->count <= 0) {
         // removing first one from the waiting list
+
         List_insert(&ready_list,ready_list.last,(ListItem*) running);
-        
+
         proc_des = (SemDescriptor*)List_detach(&sem->waiting_descriptors,(ListItem*)sem->waiting_descriptors.first);
         List_insert(&sem->descriptors,sem->descriptors.last,(ListItem*) sem_desc->ptr);
         List_detach(&waiting_list,(ListItem*) proc_des->pcb);

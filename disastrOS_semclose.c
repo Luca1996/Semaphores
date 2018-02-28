@@ -21,6 +21,7 @@ void internal_semClose(){
     }
 
     //removing semdescriptor from the list
+
     sem_desc = (SemDescriptor*) List_detach(&running->sem_descriptors,(ListItem*)sem_desc);
 
     // checking sem descriptor
@@ -37,7 +38,7 @@ void internal_semClose(){
     // now we can remove the descriptorPtr
 
     SemDescriptorPtr* sem_desc_ptr = (SemDescriptorPtr*) List_detach(&sem->descriptors,(ListItem*)sem_desc->ptr);
-    
+
     // checking pointer
 
     if (!sem_desc_ptr) {
