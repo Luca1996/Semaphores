@@ -31,7 +31,7 @@ void internal_semWait(){
         // cambiato da running a des. OK
         List_detach(&sem->descriptors,(ListItem*)descptr);
         des = (SemDescriptor*) List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem*) des);
-        disastrOS_printStatus();
+        //disastrOS_printStatus();
 
         //sem->count=0;
 
