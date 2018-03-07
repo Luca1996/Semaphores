@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <poll.h>
-
 #include "disastrOS.h"
+#include "disastrOS_constants.h"
+
 
 // we need this to handle the sleep state
 void sleeperFunction(void* args){
@@ -21,30 +22,31 @@ void childFunction(void* args){
   int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
   printf("fd=%d\n", fd);
 
-  //printf("Sto aprendo il semaforo #%d... \n",i);
-    
+
+  printf("Opening the semaphore...\n");
   int fd1=disastrOS_semopen(1, 1);
-    //printf("Sto mettendo in wait il semaforo #%d... \n",i);
+  if(fd1 != DSOS_ESEMAPHORENOFD) printf("Semaphore opened successfully!\n");
+  printf("Wait on even semaphores...\n");
   if (disastrOS_getpid() % 2 == 0){
-      printf("WAIT\n");
+      printf("Before the semwait...\n");
       disastrOS_semwait(fd1);
       disastrOS_printStatus();
-      printf("DOPO WAIT\n");
-  }  
-  
-  
+      printf("After the semwait...\n");
+  }
+  //printf("Closing the semaphore... on even semaphores...\n");
   //disastrOS_semclose(fd1);
 
-  
+
   printf("PID: %d, terminating\n", disastrOS_getpid());
 
 
   for (int i=0; i<(disastrOS_getpid()+1); ++i){
     printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
-    
-    
+
+
     disastrOS_sleep((20-disastrOS_getpid())*5);
     if (disastrOS_getpid() % 2 != 0){
+        printf("Post on odd semaphores...\n");
         disastrOS_sempost(fd1);
     }
   }
@@ -67,15 +69,6 @@ void initFunction(void* args) {
     printf("opening resource (and creating if necessary)\n");
     int fd=disastrOS_openResource(i,type,mode);
     printf("fd=%d\n", fd);
-
-    
-    
-
-    //printf("Sto chiudendo il semaforo #%d... \n",fd1);
-    //int x = disastrOS_semclose(fd1);
-    //printf("x=%d\n", x);
-
-
     disastrOS_spawn(childFunction, 0);
     alive_children++;
   }
