@@ -25,33 +25,22 @@ void childFunction(void* args){
 
   printf("Opening the semaphore...\n");
   int fd1=disastrOS_semopen(1, 1);
-  if(fd1 != DSOS_ESEMAPHORENOFD) printf("Semaphore opened successfully!\n");
-  
+
   printf("Wait on even semaphores...\n");
   if (disastrOS_getpid() % 2 == 0){
-      printf("Before the semwait...\n");
-      //disastrOS_semwait(fd1);
-      disastrOS_semclose(fd1);
-      disastrOS_printStatus();
-      printf("After the semwait...\n");
+      disastrOS_semwait(fd1);
   }
-  //printf("Closing the semaphore... on even semaphores...\n");
-  //disastrOS_semclose(fd1);
-
-
   printf("PID: %d, terminating\n", disastrOS_getpid());
 
 
   for (int i=0; i<(disastrOS_getpid()+1); ++i){
     printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
-
-
     disastrOS_sleep((20-disastrOS_getpid())*5);
     if (disastrOS_getpid() % 2 != 0){
-        printf("Post on odd semaphores...\n");
         disastrOS_sempost(fd1);
     }
   }
+  disastrOS_semclose(fd1);
   disastrOS_exit(disastrOS_getpid()+1);
 }
 
