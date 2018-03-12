@@ -11,7 +11,8 @@
 
 void internal_semOpen(){
 
-    //  Get info from syscall
+
+    // getting info from syscall
 
     int id = running->syscall_args[0];
     int count = running->syscall_args[1];
@@ -20,14 +21,14 @@ void internal_semOpen(){
 
     Semaphore* sem = SemaphoreList_byId(&semaphores_list, id);
 
-    /* if count <= 0 we don't want to open sem */
+    // if count <= 0 we don't want to open sem
 
     if (count <= 0){
         running->syscall_retvalue = DSOS_ESEMAPHOREOPEN;
         return;
     }
 
-    /* if sem not open yet we alloc it */
+    // if sem not open yet we alloc it
 
     if (!sem) {
         sem=Semaphore_alloc(id, count);
@@ -48,13 +49,13 @@ void internal_semOpen(){
 
     List_insert(&running->sem_descriptors, running->sem_descriptors.last, (ListItem*) des);
 
-    // Increment the fd value for the next call
+    // incrementing the fd value for the next call
 
     running->last_sem_fd++;
 
     /* - allocating SemDescriptorPtr
-       - and raising an error if it fails 
-       - setting SemDescriptor's pointer to SemDescriptorPtr 
+       - and raising an error if it fails
+       - setting SemDescriptor's pointer to SemDescriptorPtr
        - inserting SemDescriptorPtr to sem's descriptors list
     */
 
@@ -68,7 +69,7 @@ void internal_semOpen(){
     des->ptr = desptr;
     List_insert(&sem->descriptors, sem->descriptors.last, (ListItem*) desptr);
 
-    /* - everything's fine 
+    /* - everything's fine
        - we return from system call
     */
 

@@ -8,13 +8,13 @@
 
 void internal_semWait(){
 
-    /* - taking sem id from system call
-       - taking SemDescriptor from process' SemDescriptor list
-       - returning an error if we don't find it 
+    /* - taking sem fd from syscall
+       - retrieving SemDescriptor from process SemDescriptor list
+       - returning an error if we do not find it
     */
 
-    int id = running->syscall_args[0];
-    SemDescriptor* des = SemDescriptorList_byFd(&running->sem_descriptors, id);
+    int fd = running->syscall_args[0];
+    SemDescriptor* des = SemDescriptorList_byFd(&running->sem_descriptors, fd);
 
     if (!des) {
         running->syscall_retvalue = DSOS_ESEMAPHORENOFD;
@@ -37,7 +37,7 @@ void internal_semWait(){
     */
 
     Semaphore* sem = des->semaphore;
-    
+
     if (!sem) {
         running->syscall_retvalue = DSOS_ESEMAPHORENOTAVAIBLE;
         return;
@@ -55,15 +55,15 @@ void internal_semWait(){
 
     PCB* p;
     sem->count=(sem->count-1);
-    
+
     if(sem->count < 0){
-        List_detach(&sem->descriptors,(ListItem*)descptr);
+        List_detach(&sem->descriptors, (ListItem*) descptr);
         des = (SemDescriptor*) List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem*) des);
         //sem->count=0;
         List_insert(&waiting_list, waiting_list.last, (ListItem*) running);
         running->status = Waiting;
         p = (PCB*) List_detach(&ready_list, (ListItem*) ready_list.first);
-        running=(PCB*)p;
+        running = (PCB*)p;
     }
 
     /* everything's fine so we return 0 */
