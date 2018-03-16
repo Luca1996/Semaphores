@@ -23,15 +23,12 @@ void internal_semOpen(){
     
     // if count <= 0 we don't want to open sem
 
-    if (count <= 0){
+    if (count < 0){
         running->syscall_retvalue = DSOS_ESEMAPHOREOPEN;
         return;
     }
 
-    if (sem && running->sem_descriptors.size != 0 ) {
-        running->syscall_retvalue = DSOS_ESEMAPHOREOPEN;
-        return;
-    }
+    
     // if sem not open yet we alloc it
 
     if (!sem) {
