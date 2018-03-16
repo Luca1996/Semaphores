@@ -20,7 +20,7 @@ void internal_semOpen(){
     // using id to take semaphore
 
     Semaphore* sem = SemaphoreList_byId(&semaphores_list, id);
-
+    
     // if count <= 0 we don't want to open sem
 
     if (count <= 0){
@@ -28,6 +28,10 @@ void internal_semOpen(){
         return;
     }
 
+    if (sem && running->sem_descriptors.size != 0 ) {
+        running->syscall_retvalue = DSOS_ESEMAPHOREOPEN;
+        return;
+    }
     // if sem not open yet we alloc it
 
     if (!sem) {

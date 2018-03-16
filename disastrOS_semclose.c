@@ -55,7 +55,10 @@ void internal_semClose(){
     }
 
     /* everything's fine so we free the resources */
-
+    if (sem->descriptors.size == 0 && sem->waiting_descriptors.size == 0) {
+        List_detach(&semaphores_list,(ListItem*)sem);
+        Semaphore_free(sem);
+    }
     SemDescriptor_free(sem_desc);
     SemDescriptorPtr_free(sem_desc_ptr);
     running->syscall_retvalue = 0;
