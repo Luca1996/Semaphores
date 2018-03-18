@@ -4,24 +4,24 @@
 #include "disastrOS.h"
 #include "disastrOS_constants.h"
 
-#define NUMCHILDREN 5
-typedef struct proc_args {
-    int prod_id;
-    int cons_id;
-    int type;
-}proc_args_t;
+#define CICLES 5
 
 void produce(int prod_id,int cons_id){
-    disastrOS_semwait(prod_id);
-    printf("PRODUCED\n");
-    disastrOS_sempost(cons_id);
-    disastrOS_printStatus();
+    for (int i = 0; i < CICLES; ++i){
+        //disastrOS_printStatus();
+        disastrOS_semwait(prod_id);
+        printf("PRODUCED\n");
+        disastrOS_sempost(cons_id);
+    }
 }
 
 void consume(int prod_id,int cons_id){
-    disastrOS_semwait(cons_id);
-    printf("CONSUMED\n");
-    disastrOS_sempost(prod_id);
+    for (int i = 0; i < CICLES; ++i){
+        //disastrOS_printStatus();
+        disastrOS_semwait(cons_id);
+        printf("CONSUMED\n");
+        disastrOS_sempost(prod_id);
+    }
 }
 // we need this to handle the sleep state
 void sleeperFunction(void* args){
@@ -39,24 +39,24 @@ void childFunction(void* args){
   int mode=0;
   int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
   printf("fd=%d\n", fd);
+ 
+  printf("Opening the semaphores...\n");
 
-  /*proc_args_t* child_args = (proc_args_t*) args;
-  int prod_id = child_args -> prod_id;
-  int cons_id = child_args -> cons_id;*/
-  int prod_id;
-  int cons_id;
-//   printf("Opening the semaphore...\n");
-  prod_id = disastrOS_semopen(1,0);
-  cons_id = disastrOS_semopen(2,0);
+  int prod_id = disastrOS_semopen(1,4);
+  
+  int cons_id = disastrOS_semopen(2,0);
+  printf("********WAITING SOME SECS BEFORE PRODUCING********\n");
   disastrOS_sleep(20);
-
-  if (disastrOS_getpid() <= (2)) {
+  
+  
+  if (disastrOS_getpid() == 3) {
+      printf("********PROCESS N 3 WILL PRODUCE AND PROCESS N 4 WILL CONSUME********\n");
       produce(prod_id,cons_id);
   }
 
-  /*else {
+  if (disastrOS_getpid() == 4){
       consume(prod_id,cons_id);
-  }*/
+  }
   printf("PID: %d, terminating\n", disastrOS_getpid());
   
   
@@ -64,7 +64,9 @@ void childFunction(void* args){
     printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
     disastrOS_sleep((20-disastrOS_getpid())*5);
   }*/
-  
+  printf("********CLOSING SEMAPHORES********\n");
+  disastrOS_semclose(prod_id);
+  disastrOS_semclose(cons_id);
   disastrOS_exit(disastrOS_getpid()+1);
 }
 
@@ -78,16 +80,14 @@ void initFunction(void* args) {
 
   printf("I feel like to spawn 10 nice threads\n");
   int alive_children=0;
-  proc_args_t child_args [NUMCHILDREN];
-  for (int i=0; i<NUMCHILDREN; ++i) {
+  
+  for (int i=0; i<3; ++i) {
     int type=0;
     int mode=DSOS_CREATE;
     printf("mode: %d\n", mode);
     printf("opening resource (and creating if necessary)\n");
     int fd=disastrOS_openResource(i,type,mode);
     printf("fd=%d\n", fd);
-    //child_args[i].cons_id = fill;
-    //child_args[i].prod_id = fd;
     disastrOS_spawn(childFunction, 0);
     alive_children++;
   }
@@ -99,8 +99,9 @@ void initFunction(void* args) {
    // disastrOS_printStatus();
     //printf("initFunction, child: %d terminated, retval:%d, alive: %d \n",
 	  // pid, retval, alive_children);
-    //--alive_children;
+    --alive_children;
   }
+  disastrOS_printStatus();
   printf("shutdown!");
   disastrOS_shutdown();
 }
