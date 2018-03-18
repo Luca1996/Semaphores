@@ -58,7 +58,7 @@ void internal_semWait(){
 
     if(sem->count < 0){
         List_detach(&sem->descriptors, (ListItem*) descptr);
-        des = (SemDescriptor*) List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem*) des);
+        List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem*) des->ptr);
         //sem->count=0;
         List_insert(&waiting_list, waiting_list.last, (ListItem*) running);
         running->status = Waiting;

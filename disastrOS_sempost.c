@@ -41,17 +41,17 @@ void internal_semPost(){
             - we set the calling process status to ready
     */
 
-    SemDescriptor* proc_des;
+    SemDescriptorPtr* proc_desptr;
     (sem->count)++;
 
     if (sem->count <= 0) {
         //sem->count = 0;
         List_insert(&ready_list, ready_list.last, (ListItem*) running);
-        proc_des = (SemDescriptor*) List_detach(&sem->waiting_descriptors, (ListItem*) sem->waiting_descriptors.first);
-        List_insert(&sem->descriptors, sem->descriptors.last, (ListItem*) proc_des->ptr);
-        List_detach(&waiting_list, (ListItem*) proc_des->pcb);
+        proc_desptr = (SemDescriptorPtr*) List_detach(&sem->waiting_descriptors, (ListItem*) sem->waiting_descriptors.first);
+        List_insert(&sem->descriptors, sem->descriptors.last, (ListItem*) proc_desptr);
+        List_detach(&waiting_list, (ListItem*) proc_desptr->descriptor->pcb);
         running->status = Ready;
-        running = proc_des->pcb;
+        running = proc_desptr->descriptor->pcb;
 
     }
 

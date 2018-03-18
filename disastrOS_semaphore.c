@@ -55,7 +55,7 @@ void Semaphore_print(Semaphore* r) {
   printf("id: %d, count:%d, pids:", r->id, r->count);
   SemDescriptorPtrList_print(&r->descriptors); //stampa puntatori ai processi
   printf("waiting: ");
-  SemDescriptorList_print(&r->waiting_descriptors);
+  SemDescriptorPtrList_print(&r->waiting_descriptors);
 }
 
 void SemaphoreList_print(ListHead* l){
