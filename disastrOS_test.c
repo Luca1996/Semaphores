@@ -5,6 +5,7 @@
 #include "disastrOS_constants.h"
 
 #define CICLES 5
+#define NUMPRODUCER 2
 
 void produce(int prod_id,int cons_id){
     for (int i = 0; i < CICLES; ++i){
@@ -42,7 +43,7 @@ void childFunction(void* args){
  
   printf("Opening the semaphores...\n");
 
-  int prod_id = disastrOS_semopen(1,4);
+  int prod_id = disastrOS_semopen(1,NUMPRODUCER);
   
   int cons_id = disastrOS_semopen(2,0);
   printf("********WAITING SOME SECS BEFORE PRODUCING********\n");
