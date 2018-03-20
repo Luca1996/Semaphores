@@ -32,7 +32,7 @@ void internal_semPost(){
         return;
     }
 
-    /* - incrementing sem count
+    /* - decrementing sem count
        - if sem count is <= 0:
             - we insert the running process in ready list
             - we take the SemDescriptor from the semaphore waiting list
