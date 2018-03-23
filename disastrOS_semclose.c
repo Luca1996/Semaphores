@@ -7,44 +7,58 @@
 #include "disastrOS_semdescriptor.h"
 
 void internal_semClose(){
-    // we first take the fd of the semaphore
-    // then we look for the semaphore
+
+    /* - taking sem fd from syscall
+       - retrieving SemDescriptor from process SemDescriptor list
+       - returning an error if we do not find it
+       - we remove it from process' SemDescriptor list
+    */
 
     int fd = running->syscall_args[0];
-    SemDescriptor* sem_desc = SemDescriptorList_byFd(&running->sem_descriptors,fd);
-
-    // checking semaphore descriptor, if not found we raise an error
+    SemDescriptor* sem_desc = SemDescriptorList_byFd(&running->sem_descriptors, fd);
 
     if (!sem_desc) {
         running->syscall_retvalue = DSOS_ESEMAPHORENOFD;
         return;
     }
 
-    //removing semdescriptor from the list
-    sem_desc = (SemDescriptor*) List_detach(&running->sem_descriptors,(ListItem*)sem_desc);
+    //check this one... seems to work
 
-    // checking sem descriptor
+    //sem_desc = (SemDescriptor*)
+    List_detach(&running->sem_descriptors, (ListItem*)sem_desc);
 
-    if (!sem_desc) {
+    /*if (!sem_desc) {
         running->syscall_retvalue = DSOS_ESEMAPHORECLOSE;
         return;
-    }
+    }*/
 
-    // taking the semaphore from the descriptor
+   /* - taking semaphore from the descriptor
+      - returning an error if we don't find it
+    */
 
     Semaphore* sem = sem_desc->semaphore;
 
-    // now we can remove the descriptorPtr
+    if (!sem) {
+        running->return_value = DSOS_ESEMAPHORENOTAVAIBLE;
+        return;
+    }
 
-    SemDescriptorPtr* sem_desc_ptr = (SemDescriptorPtr*) List_detach(&sem->descriptors,(ListItem*)sem_desc->ptr);
-    
-    // checking pointer
+    /* - taking SemDescriptorPtr from sem_descriptor's list
+       - returning an error if we don't find it
+    */
+
+    SemDescriptorPtr* sem_desc_ptr = (SemDescriptorPtr*) List_detach(&sem->descriptors, (ListItem*) sem_desc->ptr);
 
     if (!sem_desc_ptr) {
         running->syscall_retvalue = DSOS_ESEMAPHOREDESC;
         return;
     }
 
+    /* everything's fine so we free the resources */
+    if (sem->descriptors.size == 0 && sem->waiting_descriptors.size == 0) {
+        List_detach(&semaphores_list,(ListItem*)sem);
+        Semaphore_free(sem);
+    }
     SemDescriptor_free(sem_desc);
     SemDescriptorPtr_free(sem_desc_ptr);
     running->syscall_retvalue = 0;
