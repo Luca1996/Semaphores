@@ -22,15 +22,7 @@ void internal_semClose(){
         return;
     }
 
-    //check this one... seems to work
-
-    //sem_desc = (SemDescriptor*)
     List_detach(&running->sem_descriptors, (ListItem*)sem_desc);
-
-    /*if (!sem_desc) {
-        running->syscall_retvalue = DSOS_ESEMAPHORECLOSE;
-        return;
-    }*/
 
    /* - taking semaphore from the descriptor
       - returning an error if we don't find it
@@ -54,11 +46,15 @@ void internal_semClose(){
         return;
     }
 
-    /* everything's fine so we free the resources */
+    // if we don't have descriptors in the semaphore we remove it from the global list
+
     if (sem->descriptors.size == 0 && sem->waiting_descriptors.size == 0) {
         List_detach(&semaphores_list,(ListItem*)sem);
         Semaphore_free(sem);
     }
+
+    /* everything's fine so we free the resources and return from system call */
+
     SemDescriptor_free(sem_desc);
     SemDescriptorPtr_free(sem_desc_ptr);
     running->syscall_retvalue = 0;

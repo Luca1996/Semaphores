@@ -21,7 +21,7 @@ void internal_semOpen(){
 
     Semaphore* sem = SemaphoreList_byId(&semaphores_list, id);
     
-    // if count <= 0 we don't want to open sem
+    // if count < 0 we don't want to open sem
 
     if (count < 0){
         running->syscall_retvalue = DSOS_ESEMAPHOREOPEN;

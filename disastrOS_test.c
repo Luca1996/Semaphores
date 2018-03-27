@@ -9,7 +9,6 @@
 
 void produce(int prod_id,int cons_id){
     for (int i = 0; i < CICLES; i++){
-        //disastrOS_printStatus();
         disastrOS_semwait(prod_id);
         printf("PRODUCED\n");
         disastrOS_sempost(cons_id);
@@ -18,7 +17,6 @@ void produce(int prod_id,int cons_id){
 
 void consume(int prod_id,int cons_id){
     for (int i = 0; i < CICLES; i++){
-        //disastrOS_printStatus();
         disastrOS_semwait(cons_id);
         printf("CONSUMED\n");
         disastrOS_sempost(prod_id);
@@ -79,9 +77,6 @@ void initFunction(void* args) {
   disastrOS_printStatus();
   printf("hello, I am init and I just started\n");
   disastrOS_spawn(sleeperFunction, 0);
-  //int fd = disastrOS_semopen(1, 2);
-  //int fill = disastrOS_semopen(2, 0);
-
   printf("I feel like to spawn 10 nice threads\n");
   int alive_children=0;
 
@@ -92,15 +87,6 @@ void initFunction(void* args) {
     printf("opening resource (and creating if necessary)\n");
     int fd=disastrOS_openResource(i,type,mode);
     printf("fd=%d\n", fd);
-
-
-
-
-    //printf("Sto chiudendo il semaforo #%d... \n",fd1);
-    //int x = disastrOS_semclose(fd1);
-    //printf("x=%d\n", x);
-
-
     disastrOS_spawn(childFunction, 0);
     alive_children++;
   }

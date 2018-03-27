@@ -45,7 +45,6 @@ void internal_semPost(){
     (sem->count)++;
 
     if (sem->count <= 0) {
-        //sem->count = 0;
         List_insert(&ready_list, ready_list.last, (ListItem*) running);
         proc_desptr = (SemDescriptorPtr*) List_detach(&sem->waiting_descriptors, (ListItem*) sem->waiting_descriptors.first);
         List_insert(&sem->descriptors, sem->descriptors.last, (ListItem*) proc_desptr);
